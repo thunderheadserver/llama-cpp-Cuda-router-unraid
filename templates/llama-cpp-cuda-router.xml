@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Container version="2">
+  <Name>llama.cpp-CUDA-Router</Name>
+  <Repository>ghcr.io/ggml-org/llama.cpp:server-cuda</Repository>
+  <Registry>https://ghcr.io</Registry>
+  <Network>bridge</Network>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/ggml-org/llama.cpp/discussions</Support>
+  <Project>https://github.com/ggml-org/llama.cpp</Project>
+  <Overview>llama.cpp Docker container for NVIDIA GPUs. Configured in Router Mode to support multiple models with automatic model loading and unloading. Includes configurable inference settings such as context size, GPU offloading, KV-cache precision, reasoning controls, Jinja templates, and parallel processing.
+
+Not actively and/or very poorly maintained because I don't know what the hell I'm doing.</Overview>
+  <WebUI>http://[IP]:[PORT:8000]/</WebUI>
+  <ExtraParams>--runtime=nvidia --health-cmd="curl -fsS http://localhost:8000/health" --health-interval=30s --health-timeout=10s --health-retries=3 --health-start-period=120s</ExtraParams>
+  <PostArgs/>
+  <Config Name="API / Web UI Port" Target="8000" Default="8000" Mode="rw" Description="Host TCP port for the llama.cpp API and Web UI. Default: 8000. The container listens on TCP 8000." Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Server Bind Address" Target="LLAMA_ARG_HOST" Default="0.0.0.0" Mode="rw" Description="Network interface inside container. 0.0.0.0 = all interfaces; 127.0.0.1 = loopback only. Use 0.0.0.0 for Docker bridge access." Type="Variable" Display="always" Required="false" Mask="false">0.0.0.0</Config>
+  <Config Name="Internal Server Port" Target="LLAMA_ARG_PORT" Default="8000" Mode="rw" Description="Internal llama.cpp listening port. Default: 8000. Changing this also requires updating the Docker port mapping and health check." Type="Variable" Display="always" Required="false" Mask="false">8000</Config>
+  <Config Name="Model Storage Directory" Target="/models" Default="/mnt/user/appdata/llama_cpp/model" Mode="rw" Description="Host directory containing GGUF model files and models.ini, mounted as /models inside the container." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/llama_cpp/model</Config>
+  <Config Name="Model Presets File" Target="LLAMA_ARG_MODELS_PRESET" Default="/models/models.ini" Mode="rw" Description="Path to the multi-model router preset inside the container. Default: /models/models.ini. Each [model-name] section defines an available model." Type="Variable" Display="always" Required="true" Mask="false">/models/models.ini</Config>
+  <Config Name="Maximum Loaded Models" Target="LLAMA_ARG_MODELS_MAX" Default="1" Mode="rw" Description="Maximum models resident simultaneously. 1 = one at a time; 0 = unlimited. Choose based on GPU memory." Type="Variable" Display="always" Required="false" Mask="false">1</Config>
+  <Config Name="Automatic Model Loading" Target="LLAMA_ARG_MODELS_AUTOLOAD" Default="true|false" Mode="rw" Description="Accepted values: true / false. true automatically loads an available model when a request selects it; it does not preload every model at startup." Type="Variable" Display="always" Required="false" Mask="false">true</Config>
+  <Config Name="Model Download Cache Directory" Target="/root/.cache/llama.cpp" Default="/mnt/user/appdata/llama_cpp/cache" Mode="rw" Description="Persistent host directory for the llama.cpp download cache. Container mount: /root/.cache/llama.cpp. Verify actual cache path for your image/build." Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/llama_cpp/cache</Config>
+  <Config Name="NVIDIA GPU Devices" Target="NVIDIA_VISIBLE_DEVICES" Default="all" Mode="rw" Description="NVIDIA GPU device selector. all = all NVIDIA GPUs; a GPU UUID can select one specific device. Requires NVIDIA container runtime." Type="Variable" Display="always" Required="false" Mask="false">all</Config>
+  <Config Name="NVIDIA Driver Capabilities" Target="NVIDIA_DRIVER_CAPABILITIES" Default="compute,utility" Mode="rw" Description="Comma-separated NVIDIA driver features exposed to the container. Default: compute,utility. compute enables CUDA; utility enables device information such as nvidia-smi." Type="Variable" Display="always" Required="false" Mask="false">compute,utility</Config>
+  <Config Name="GPU Offload Layers" Target="LLAMA_ARG_N_GPU_LAYERS" Default="99" Mode="rw" Description="Number of model layers offloaded to NVIDIA GPU. 99 requests full offload for most models; reduce to fit available VRAM." Type="Variable" Display="always" Required="false" Mask="false">99</Config>
+  <Config Name="GPU KV Cache Precision — Keys" Target="LLAMA_ARG_CACHE_TYPE_K" Default="f16|q8_0|q4_0" Mode="rw" Description="Common values: f16 / q8_0 / q4_0. Controls KV attention-key cache precision; supported values vary by model and llama.cpp build." Type="Variable" Display="always" Required="false" Mask="false">q8_0</Config>
+  <Config Name="GPU KV Cache Precision — Values" Target="LLAMA_ARG_CACHE_TYPE_V" Default="f16|q8_0|q4_0" Mode="rw" Description="Common values: f16 / q8_0 / q4_0. Controls KV attention-value cache precision; supported values vary by model and llama.cpp build." Type="Variable" Display="always" Required="false" Mask="false">q8_0</Config>
+  <Config Name="Inference Context Size (Tokens)" Target="LLAMA_ARG_CTX_SIZE" Default="16384" Mode="rw" Description="Maximum token context for a loaded model worker. Default: 16384. Higher values can increase memory use." Type="Variable" Display="always" Required="false" Mask="false">16384</Config>
+  <Config Name="Inference Parallel Slots" Target="LLAMA_ARG_N_PARALLEL" Default="1" Mode="rw" Description="Number of concurrently processed request slots per worker. Default: 1. More slots can increase KV-cache memory consumption." Type="Variable" Display="always" Required="false" Mask="false">1</Config>
+  <Config Name="Jinja Chat Templates" Target="LLAMA_ARG_JINJA" Default="true|false" Mode="rw" Description="Accepted values: true / false. Enables compatible Jinja chat templates used by model-specific prompt formatting." Type="Variable" Display="always" Required="false" Mask="false">true</Config>
+  <Config Name="Reasoning Mode" Target="LLAMA_ARG_REASONING" Default="auto|on|off" Mode="rw" Description="Accepted values: auto / on / off. Controls whether model reasoning is requested where supported." Type="Variable" Display="always" Required="false" Mask="false">on</Config>
+  <Config Name="Reasoning Output Format" Target="LLAMA_ARG_THINK" Default="auto|none|deepseek|deepseek-legacy" Mode="rw" Description="Listed options: auto / none / deepseek / deepseek-legacy. Selects how supported reasoning is represented in API output." Type="Variable" Display="always" Required="false" Mask="false">deepseek</Config>
+  <Config Name="Reasoning Token Budget" Target="LLAMA_ARG_THINK_BUDGET" Default="1024" Mode="rw" Description="Reasoning token budget. -1 = unrestricted; 0 = no thinking budget; positive integer = configured budget. Model support varies." Type="Variable" Display="always" Required="false" Mask="false">1024</Config>
+  <Category>Tools:Utilities</Category>
+  <!--Before publishing: add <Icon> and <TemplateURL> with your own public GitHub repository URL.-->
+</Container>
