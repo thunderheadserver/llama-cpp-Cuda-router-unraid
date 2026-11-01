@@ -1,1 +1,0 @@
-Place your custom llama.cpp PNG here as llama-cpp.png before publication.
