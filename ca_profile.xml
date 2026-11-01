@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CommunityApplications>
-  <Profile>Unraid Docker templates for locally running llama.cpp with NVIDIA GPUs. Community-maintained; compatibility and support are not guaranteed.</Profile>
-  <!-- Add <Icon> and <WebPage> pointing to your GitHub repository before submission. -->
+  <Profile>Unraid Docker template for running llama.cpp with NVIDIA GPUs. Supports multiple models through Router Mode, automatic model loading, and configurable inference settings. Community-maintained; compatibility and support are not guaranteed.</Profile>
+  <Icon>https://raw.githubusercontent.com/thunderheadserver/llama-cpp-Cuda-router-unraid/main/icons/llamacpp-icon.png</Icon>
+  <WebPage>https://github.com/thunderheadserver/llama-cpp-Cuda-router-unraid</WebPage>
 </CommunityApplications>
