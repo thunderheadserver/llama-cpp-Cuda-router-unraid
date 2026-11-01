@@ -35,5 +35,4 @@ Not actively and/or very poorly maintained because I don't know what the hell I'
   <Config Name="Reasoning Output Format" Target="LLAMA_ARG_THINK" Default="auto|none|deepseek|deepseek-legacy" Mode="rw" Description="Listed options: auto / none / deepseek / deepseek-legacy. Selects how supported reasoning is represented in API output." Type="Variable" Display="always" Required="false" Mask="false">deepseek</Config>
   <Config Name="Reasoning Token Budget" Target="LLAMA_ARG_THINK_BUDGET" Default="1024" Mode="rw" Description="Reasoning token budget. -1 = unrestricted; 0 = no thinking budget; positive integer = configured budget. Model support varies." Type="Variable" Display="always" Required="false" Mask="false">1024</Config>
   <Category>Tools:Utilities</Category>
-  <!--Before publishing: add <Icon> and <TemplateURL> with your own public GitHub repository URL.-->
 </Container>
